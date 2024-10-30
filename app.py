@@ -50,7 +50,6 @@ ASCII_FONTS = [
     'mini', 'small', 'big', 'script', 'shadow'
 ]
 
-# Enhanced comedic quotes with matrix/programming humor
 COMEDIC_QUOTES = [
     "404: Paradise not found",
     "sudo chmod 777 heaven",
@@ -133,21 +132,34 @@ def ascii_generator():
             generated_art = None
     return render_template('ascii_generator.html', ascii_fonts=ASCII_FONTS, generated_art=generated_art)
 
-@app.route('/theme', methods=['POST'])
+@app.route('/update_theme', methods=['POST'])
 def update_theme():
-    theme = request.form.get('theme')
-    border_style = request.form.get('border_style')
-    
-    if theme and theme in THEMES:
-        session['theme'] = theme
-    if border_style and border_style in BORDER_STYLES:
-        session['border_style'] = border_style
+    try:
+        theme = request.form.get('theme')
+        border_style = request.form.get('border_style')
         
-    pref = models.ThemePreference(
-        theme_name=theme or 'matrix',
-        border_style=border_style or 'double'
-    )
-    db.session.add(pref)
-    db.session.commit()
-    
-    return redirect(request.referrer or '/')
+        if not theme or theme not in THEMES:
+            flash('Invalid theme selected', 'error')
+            return redirect(request.referrer or '/')
+            
+        if not border_style or border_style not in BORDER_STYLES:
+            flash('Invalid border style selected', 'error')
+            return redirect(request.referrer or '/')
+        
+        session['theme'] = theme
+        session['border_style'] = border_style
+            
+        pref = models.ThemePreference(
+            theme_name=theme,
+            border_style=border_style
+        )
+        db.session.add(pref)
+        db.session.commit()
+        
+        flash('Theme updated successfully', 'success')
+        return redirect(request.referrer or '/')
+        
+    except Exception as e:
+        app.logger.error(f"Error updating theme: {str(e)}")
+        flash('Failed to update theme', 'error')
+        return redirect(request.referrer or '/')
