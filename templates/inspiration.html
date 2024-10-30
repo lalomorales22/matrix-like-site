@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ascii-box matrix-text">
+    <pre>
+╔══════════════════════════════════════╗
+║         Digital Enlightenment        ║
+╚══════════════════════════════════════╝
+    </pre>
+</div>
+
+<div class="matrix-reveal ascii-box">
+    <pre>
+    {{ quote }}
+    </pre>
+</div>
+
+<div class="ascii-box">
+    <button class="matrix-button" onclick="location.reload()">
+        Generate New Wisdom
+    </button>
+</div>
+{% endblock %}

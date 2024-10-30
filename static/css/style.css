@@ -1,0 +1,91 @@
+:root {
+    --matrix-primary: #9b30ff;
+    --matrix-secondary: #4b0082;
+    --matrix-text: #e0e0e0;
+}
+
+body {
+    background-color: #000;
+    color: var(--matrix-text);
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+}
+
+.ascii-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.ascii-header, .ascii-footer {
+    text-align: center;
+    color: var(--matrix-primary);
+    margin: 20px 0;
+}
+
+.ascii-nav {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.ascii-nav a {
+    color: var(--matrix-primary);
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+.ascii-nav a:hover {
+    color: var(--matrix-secondary);
+}
+
+.matrix-text {
+    position: relative;
+    overflow: hidden;
+}
+
+.matrix-reveal {
+    animation: matrixReveal 2s ease-out;
+}
+
+@keyframes matrixReveal {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ascii-box {
+    border: 1px solid var(--matrix-primary);
+    padding: 20px;
+    margin: 20px 0;
+    white-space: pre-wrap;
+}
+
+.journal-entry {
+    background: rgba(155, 48, 255, 0.1);
+    border: 1px solid var(--matrix-primary);
+    margin: 10px 0;
+    padding: 15px;
+}
+
+.matrix-button {
+    background: transparent;
+    border: 1px solid var(--matrix-primary);
+    color: var(--matrix-text);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.matrix-button:hover {
+    background: var(--matrix-primary);
+    color: #000;
+}
