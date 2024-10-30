@@ -5,11 +5,14 @@ class MatrixEffect {
         this.loadingElements = document.querySelectorAll('.matrix-loading');
         this.init();
         this.initLoadingAnimations();
+        this.initRainEffect();
+        this.initInteractiveEffects();
     }
 
     init() {
         this.elements.forEach(element => {
             this.animateText(element);
+            this.makeTextInteractive(element);
         });
     }
 
@@ -51,6 +54,67 @@ class MatrixEffect {
             element.textContent = frames[frameIndex];
             frameIndex = (frameIndex + 1) % frames.length;
         }, 100);
+    }
+
+    initRainEffect() {
+        const container = document.createElement('div');
+        container.className = 'matrix-rain';
+        document.body.appendChild(container);
+
+        for (let i = 0; i < 50; i++) {
+            this.createRainDrop(container);
+        }
+    }
+
+    createRainDrop(container) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        drop.style.left = `${Math.random() * 100}%`;
+        drop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+        drop.textContent = this.characters[Math.floor(Math.random() * this.characters.length)];
+        container.appendChild(drop);
+
+        drop.addEventListener('animationend', () => {
+            drop.remove();
+            this.createRainDrop(container);
+        });
+    }
+
+    makeTextInteractive(element) {
+        element.addEventListener('mouseover', () => {
+            const text = element.textContent;
+            this.scrambleText(element, text);
+        });
+    }
+
+    scrambleText(element, originalText) {
+        let iterations = 0;
+        const maxIterations = 10;
+
+        const interval = setInterval(() => {
+            element.textContent = originalText
+                .split('')
+                .map((char) => {
+                    if (char === ' ') return char;
+                    return this.characters[Math.floor(Math.random() * this.characters.length)];
+                })
+                .join('');
+
+            if (iterations >= maxIterations) {
+                clearInterval(interval);
+                element.textContent = originalText;
+            }
+            iterations++;
+        }, 50);
+    }
+
+    initInteractiveEffects() {
+        document.querySelectorAll('.ascii-box').forEach(box => {
+            box.addEventListener('click', () => {
+                box.classList.add('ascii-pulse');
+                setTimeout(() => box.classList.remove('ascii-pulse'), 500);
+            });
+        });
     }
 }
 

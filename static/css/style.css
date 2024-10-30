@@ -22,12 +22,15 @@ body {
     color: var(--matrix-text);
     font-family: 'Courier New', monospace;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 .ascii-container {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .ascii-header, .ascii-footer {
@@ -50,11 +53,18 @@ body {
 
 .ascii-nav a:hover {
     color: var(--matrix-secondary);
+    text-shadow: 0 0 5px var(--matrix-primary);
 }
 
 .matrix-text {
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    transition: text-shadow 0.3s;
+}
+
+.matrix-text:hover {
+    text-shadow: 0 0 5px var(--matrix-primary);
 }
 
 .matrix-reveal {
@@ -80,6 +90,23 @@ body {
     padding: 20px;
     margin: 20px 0;
     white-space: pre-wrap;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.ascii-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--matrix-primary);
+}
+
+.ascii-pulse {
+    animation: pulse 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
 }
 
 .journal-entry {
@@ -87,6 +114,12 @@ body {
     border: 1px solid var(--matrix-primary);
     margin: 10px 0;
     padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.journal-entry:hover {
+    transform: translateX(5px);
+    border-left-width: 3px;
 }
 
 .matrix-button {
@@ -96,6 +129,8 @@ body {
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
 }
 
 .matrix-button:hover {
@@ -113,9 +148,47 @@ body {
     border: 1px solid var(--matrix-primary);
     padding: 5px;
     margin-right: 10px;
+    transition: all 0.3s;
+}
+
+.theme-selector select:hover {
+    border-color: var(--matrix-secondary);
+    box-shadow: 0 0 5px var(--matrix-primary);
 }
 
 .theme-selector label {
     color: var(--matrix-primary);
     margin-right: 5px;
+}
+
+.matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.rain-drop {
+    position: absolute;
+    color: var(--matrix-primary);
+    font-family: 'Courier New', monospace;
+    animation: rain linear infinite;
+    opacity: 0;
+}
+
+@keyframes rain {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
 }
