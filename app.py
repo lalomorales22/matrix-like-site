@@ -50,6 +50,24 @@ ASCII_FONTS = [
     'mini', 'small', 'big', 'script', 'shadow'
 ]
 
+# Enhanced comedic quotes with matrix/programming humor
+COMEDIC_QUOTES = [
+    "404: Paradise not found",
+    "sudo chmod 777 heaven",
+    "while(life): try_not_to_sin()",
+    "if(brain.exists()): matrix.enter()",
+    "catch(Temptation) { repent(); }",
+    "for(soul in purgatory): await redemption()",
+    "class Human extends Divine { constructor() { super(); this.sinCount = 0; } }",
+    "git commit -m 'Fixed sins in production'",
+    "SELECT * FROM heaven WHERE good_deeds > sins",
+    "pip install enlightenment",
+    "// TODO: Fix humanity",
+    "function escapeMatrix() { return 'There is no escape'; }",
+    "Error: Reality.js not found",
+    "npm install --save eternal-salvation"
+]
+
 with app.app_context():
     import models
     db.create_all()
@@ -91,12 +109,14 @@ def journal():
 
 @app.route('/comedy')
 def comedy():
-    comedic_quotes = [
-        "404: Paradise not found",
-        "sudo chmod 777 heaven",
-        "while(life): try_not_to_sin()"
-    ]
-    return render_template('comedy.html', quote=random.choice(comedic_quotes))
+    try:
+        quote = random.choice(COMEDIC_QUOTES)
+        return render_template('comedy.html', quote=quote, error=None)
+    except Exception as e:
+        app.logger.error(f"Error generating comedy quote: {str(e)}")
+        return render_template('comedy.html', 
+                             quote="Error 500: Humor.exe has stopped working", 
+                             error="Failed to generate joke")
 
 @app.route('/ascii-generator', methods=['GET', 'POST'])
 def ascii_generator():
