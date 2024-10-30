@@ -3,21 +3,30 @@
 {% block content %}
 <div class="ascii-box matrix-text">
     <pre>
-╔══════════════════════════════════════╗
-║         Digital Enlightenment        ║
-╚══════════════════════════════════════╝
+╔═══════════════════════════════════════════════╗
+║              Digital Enlightenment             ║
+║          Wisdom from the Neural Net           ║
+╚═══════════════════════════════════════════════╝
     </pre>
 </div>
 
 <div class="matrix-reveal ascii-box">
     <pre>
-    {{ quote }}
+┌───────────────────────────────────────────────┐
+│                                               │
+│  <span class="matrix-loading">⠋</span> {{ quote }} <span class="matrix-loading">⠋</span>  │
+│                                               │
+└───────────────────────────────────────────────┘
     </pre>
 </div>
 
 <div class="ascii-box">
+    <pre>
+╔═══════════════════════════════════════════════╗
+║             Generate New Wisdom                ║
+╚═══════════════════════════════════════════════╝</pre>
     <button class="matrix-button" onclick="location.reload()">
-        Generate New Wisdom
+        <pre>[↻ Next Quote]</pre>
     </button>
 </div>
 {% endblock %}
