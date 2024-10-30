@@ -1,11 +1,19 @@
 class ASCIIArt {
     static borderTypes = {
         single: ['┌', '─', '┐', '│', '└', '┘'],
-        double: ['╔', '═', '╗', '║', '╚', '╝']
+        double: ['╔', '═', '╗', '║', '╚', '╝'],
+        bold: ['┏', '━', '┓', '┃', '┗', '┛'],
+        dashed: ['┌', '╌', '┐', '┊', '└', '┘']
     };
 
-    static createBox(content, type = 'single') {
-        const borders = this.borderTypes[type];
+    static getCurrentBorderStyle() {
+        const borderSelect = document.getElementById('border_style');
+        return borderSelect ? borderSelect.value : 'double';
+    }
+
+    static createBox(content, type = null) {
+        type = type || this.getCurrentBorderStyle();
+        const borders = this.borderTypes[type] || this.borderTypes.double;
         const lines = content.split('\n');
         const width = Math.max(...lines.map(line => line.length));
         
@@ -30,5 +38,19 @@ class ASCIIArt {
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.ascii-wrap').forEach(element => {
         ASCIIArt.wrapContent(element);
+    });
+
+    // Update ASCII boxes when theme changes
+    const themeSelect = document.getElementById('theme');
+    const borderSelect = document.getElementById('border_style');
+    
+    [themeSelect, borderSelect].forEach(select => {
+        if (select) {
+            select.addEventListener('change', () => {
+                document.querySelectorAll('.ascii-wrap').forEach(element => {
+                    ASCIIArt.wrapContent(element);
+                });
+            });
+        }
     });
 });

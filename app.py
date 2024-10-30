@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, render_template, request, redirect, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,9 +19,43 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 db.init_app(app)
 
+THEMES = {
+    'matrix': {
+        'primary': '#9b30ff',
+        'secondary': '#4b0082',
+        'text': '#e0e0e0'
+    },
+    'cyberpunk': {
+        'primary': '#ff0055',
+        'secondary': '#00ff9f',
+        'text': '#ffffff'
+    },
+    'retro': {
+        'primary': '#00ff00',
+        'secondary': '#008800',
+        'text': '#cccccc'
+    }
+}
+
+BORDER_STYLES = {
+    'single': ['┌', '─', '┐', '│', '└', '┘'],
+    'double': ['╔', '═', '╗', '║', '╚', '╝'],
+    'bold': ['┏', '━', '┓', '┃', '┗', '┛'],
+    'dashed': ['┌', '╌', '┐', '┊', '└', '┘']
+}
+
 with app.app_context():
     import models
     db.create_all()
+
+@app.context_processor
+def inject_themes():
+    return dict(
+        themes=THEMES,
+        border_styles=BORDER_STYLES,
+        current_theme=session.get('theme', 'matrix'),
+        current_border=session.get('border_style', 'double')
+    )
 
 @app.route('/')
 def index():
@@ -57,3 +91,22 @@ def comedy():
         "while(life): try_not_to_sin()"
     ]
     return render_template('comedy.html', quote=random.choice(comedic_quotes))
+
+@app.route('/theme', methods=['POST'])
+def update_theme():
+    theme = request.form.get('theme')
+    border_style = request.form.get('border_style')
+    
+    if theme and theme in THEMES:
+        session['theme'] = theme
+    if border_style and border_style in BORDER_STYLES:
+        session['border_style'] = border_style
+        
+    pref = models.ThemePreference(
+        theme_name=theme or 'matrix',
+        border_style=border_style or 'double'
+    )
+    db.session.add(pref)
+    db.session.commit()
+    
+    return redirect(request.referrer or '/')

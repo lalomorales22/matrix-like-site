@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="theme-{{ current_theme }}">
     <div class="ascii-container">
         <pre class="ascii-header">
 ╔══════════════════════════════════════╗
@@ -20,6 +20,32 @@
 [<a href="/">Home</a>] [<a href="/inspiration">Inspiration</a>] [<a href="/journal">Journal</a>] [<a href="/comedy">Comedy</a>]
             </pre>
         </nav>
+
+        <div class="theme-selector ascii-box">
+            <form action="{{ url_for('update_theme') }}" method="POST" class="d-flex gap-3 align-items-center">
+                <div class="form-group">
+                    <label for="theme">Theme:</label>
+                    <select name="theme" id="theme" class="form-control">
+                        {% for theme_name in themes %}
+                        <option value="{{ theme_name }}" {% if theme_name == current_theme %}selected{% endif %}>
+                            {{ theme_name.title() }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="border_style">Border Style:</label>
+                    <select name="border_style" id="border_style" class="form-control">
+                        {% for style_name in border_styles %}
+                        <option value="{{ style_name }}" {% if style_name == current_border %}selected{% endif %}>
+                            {{ style_name.title() }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="matrix-button">Apply Theme</button>
+            </form>
+        </div>
         
         <div class="content">
             {% block content %}{% endblock %}
