@@ -10,4 +10,5 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "sqlalchemy",
     "werkzeug",
+    "pyfiglet>=1.0.2",
 ]

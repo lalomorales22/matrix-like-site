@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ascii-box matrix-text">
+    <pre>
+╔═══════════════════════════════════════════════╗
+║            Matrix ASCII Art Generator          ║
+║        Transform Text into Digital Art         ║
+╚═══════════════════════════════════════════════╝
+    </pre>
+</div>
+
+<div class="ascii-box">
+    <form method="POST" class="d-flex flex-column gap-3">
+        <div class="form-group">
+            <label for="text">Enter your text:</label>
+            <input type="text" name="text" id="text" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="font">Select Font Style:</label>
+            <select name="font" id="font" class="form-control">
+                {% for font in ascii_fonts %}
+                <option value="{{ font }}">{{ font.title() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="matrix-button align-self-start">
+            <pre>[Generate ASCII Art]</pre>
+        </button>
+    </form>
+</div>
+
+{% if generated_art %}
+<div class="ascii-box matrix-reveal">
+    <pre class="generated-ascii">{{ generated_art }}</pre>
+    <button class="matrix-button mt-3" onclick="copyToClipboard()">
+        <pre>[Copy to Clipboard]</pre>
+    </button>
+</div>
+{% endif %}
+
+<script>
+function copyToClipboard() {
+    const art = document.querySelector('.generated-ascii').innerText;
+    navigator.clipboard.writeText(art).then(() => {
+        alert('ASCII art copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+    });
+}
+</script>
+{% endblock %}

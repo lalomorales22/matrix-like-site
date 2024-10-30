@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
+import pyfiglet
 
 class Base(DeclarativeBase):
     pass
@@ -43,6 +44,11 @@ BORDER_STYLES = {
     'bold': ['┏', '━', '┓', '┃', '┗', '┛'],
     'dashed': ['┌', '╌', '┐', '┊', '└', '┘']
 }
+
+ASCII_FONTS = [
+    'standard', 'banner', 'slant', 'digital', 'block', 
+    'mini', 'small', 'big', 'script', 'shadow'
+]
 
 with app.app_context():
     import models
@@ -91,6 +97,21 @@ def comedy():
         "while(life): try_not_to_sin()"
     ]
     return render_template('comedy.html', quote=random.choice(comedic_quotes))
+
+@app.route('/ascii-generator', methods=['GET', 'POST'])
+def ascii_generator():
+    generated_art = None
+    if request.method == 'POST':
+        text = request.form.get('text', '')
+        font = request.form.get('font', 'standard')
+        try:
+            if font in ASCII_FONTS:
+                fig = pyfiglet.Figlet(font=font)
+                generated_art = fig.renderText(text)
+        except Exception as e:
+            flash('Error generating ASCII art')
+            generated_art = None
+    return render_template('ascii_generator.html', ascii_fonts=ASCII_FONTS, generated_art=generated_art)
 
 @app.route('/theme', methods=['POST'])
 def update_theme():
